@@ -14,6 +14,7 @@ module.exports.login = (req, res) => {
                         expiresIn: '1m'
                     });
                     res.send({username, token});
+                    console.log(token)
                 }else {
                     console.log('No existe');
                     res.send({ message: 'No existe' });

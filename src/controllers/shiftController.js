@@ -1,9 +1,11 @@
 const connection = require('../models/db');
 
 module.exports.getTurnoById = (req, res) => {
-  const turnoId = req.params.id;
-  const query = 'SELECT id, CONCAT(nombre, " ", apellido) AS nombre FROM turnos WHERE id = ?';
+  const consult = 'SELECT first_name, document FROM USERS WHERE email = ?';
+  const data = req.body;
+  console.log(data);
 
+/*
   connection.query(query, [turnoId], (err, results) => {
     if (err) {
       console.error(err);
@@ -14,5 +16,5 @@ module.exports.getTurnoById = (req, res) => {
     } else {
       res.status(404).json({ error: 'Turno no encontrado' });
     }
-  });
+  });*/ 
 };

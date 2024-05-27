@@ -2,13 +2,13 @@ const connection = require('../models/db');
 const jwt = require('jsonwebtoken');
 
 module.exports.register = (req, res) => {
-    const { firstName, lastName, email, adress, org, password } = req.body;
-    const consult = 'INSERT INTO USERS (first_name, last_name, email, address, organization, password_user) VALUES (?,?,?,?,?,?)';
+    const { firstName, lastName,documentNumber, email, adress, org, password, termsAccepted } = req.body;
+    const consult = 'INSERT INTO USERS (first_name, last_name, document, email, address, organization, password_user, terms_conditions) VALUES (?,?,?,?,?,?,?,?)';
 
     try {
 
         console.log(firstName);
-        connection.query(consult, [firstName, lastName, email, adress, org, password])
+        connection.query(consult, [firstName, lastName,documentNumber, email, adress, org, password, termsAccepted?1:0])
             .then((results) => {
                 if(results[0].length > 0){
                     console.log(results[0]);
