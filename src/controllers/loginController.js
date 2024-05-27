@@ -2,30 +2,28 @@ const connection = require('../models/db');
 const jwt = require('jsonwebtoken');
 
 module.exports.login = (req, res) => {
-    const { username , password } = req.body;
+    const { username, password } = req.body;
     const consult = 'SELECT * FROM USERS WHERE email = ? AND password_user = ?';
 
     try {
         connection.query(consult, [username, password])
             .then((results) => {
-                if(results[0].length > 0){
-                    console.log(results[0])
-                    const token = jwt.sign({username}, "Stack", {
-                        expiresIn: '1m'
+                if (results.length > 0) {
+                    const user = results[0];
+                    const token = jwt.sign({ username: user.email, role: user.role }, "Stack", {
+                        expiresIn: '1h'
                     });
-                    res.send({username, token});
-                    console.log(token)
-                }else {
-                    console.log('No existe');
-                    res.send({ message: 'No existe' });
+                    res.send({ username: user.email, token });
+                } else {
+                    res.status(401).send({ message: 'No existe' });
                 }
             })
             .catch((error) => {
-                res.send(error[0]);
+                res.status(500).send(error);
             });
 
-    }catch (e) {
-        console.log(e)
+    } catch (e) {
+        console.log(e);
+        res.status(500).send(e);
     }
-
-}
+};
