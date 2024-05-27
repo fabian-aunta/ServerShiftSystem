@@ -1,20 +1,25 @@
 const connection = require('../models/db');
+const jwt = require('jsonwebtoken');
 
 module.exports.getTurnoById = (req, res) => {
-  const consult = 'SELECT first_name, document FROM USERS WHERE email = ?';
+  const consult = 'SELECT t.id, u.first_name , u.last_name FROM TURNS t INNER JOIN USERS u ON t.id_user = u.id WHERE u.email = ?';
   const data = req.body;
-  console.log(data);
-
-/*
-  connection.query(query, [turnoId], (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Error al obtener el turno' });
-    }
-    if (results.length > 0) {
-      res.json(results[0]);
-    } else {
-      res.status(404).json({ error: 'Turno no encontrado' });
-    }
-  });*/ 
+  const result =jwt.decode(data.jwt);
+  console.log(result.username);
+  try {
+    connection.query(consult, [result.username])
+        .then((results) => {
+            if(results[0].length > 0){
+              res.send(results[0]);
+            }else {
+                console.log('No existe');
+                res.send({ message: 'No existe' });
+            }
+        })
+        .catch((error) => {
+            res.send(error[0]);
+        });
+  }catch (e) {
+      console.log(e)
+}
 };
